@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+    <h3 class="fw-bold mb-4">📊 Business Analytics</h3>
+    <div class="row g-4">
+        <!-- Revenue Card -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-4 bg-success text-white">
+                <small class="text-uppercase opacity-75">Total Revenue</small>
+                <h2 class="fw-bold">Rs {{ revenue|floatformat:0 }}</h2>
+            </div>
+        </div>
+        <!-- Orders Card -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-4 bg-primary text-white">
+                <small class="text-uppercase opacity-75">Total Orders</small>
+                <h2 class="fw-bold">{{ orders_count }}</h2>
+            </div>
+        </div>
+        <!-- Pending Card -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-4 bg-warning text-dark">
+                <small class="text-uppercase opacity-75">Pending Orders</small>
+                <h2 class="fw-bold">{{ pending }}</h2>
+            </div>
+        </div>
+        <!-- Stock Card -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-4 bg-danger text-white">
+                <small class="text-uppercase opacity-75">Out of Stock</small>
+                <h2 class="fw-bold">{{ stock_issue }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

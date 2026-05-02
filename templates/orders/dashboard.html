@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-5">
+
+    <h2 class="fw-bold mb-4">🧾 My Orders</h2>
+
+    {% if orders %}
+
+        {% for order in orders %}
+        <div class="card mb-4 shadow-sm border-0 rounded-3">
+
+            <!-- 🔹 TOP BAR -->
+            <div class="card-header bg-light d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+                <!-- Date -->
+                <div>
+                    <small class="text-muted">ORDER PLACED</small><br>
+                    <strong>{{ order.created_at|date:"d M Y" }}</strong>
+                </div>
+
+                <!-- Order ID -->
+                <div>
+                    <small class="text-muted">ORDER #</small><br>
+                    <strong>#{{ order.id }}</strong>
+                </div>
+
+                <!-- 🔥 STATUS -->
+                <div>
+                    <small class="text-muted">STATUS</small><br>
+
+                    {% if order.status == 'pending' %}
+                        <span class="badge bg-secondary">Pending ⏳</span>
+
+                    {% elif order.status == 'processing' %}
+                        <span class="badge bg-primary">Processing 📦</span>
+
+                    {% elif order.status == 'shipped' %}
+                        <span class="badge bg-info text-dark">On the Way 🚚</span>
+
+                    {% elif order.status == 'delivered' %}
+                        <span class="badge bg-success">Delivered ✅</span>
+
+                    {% elif order.status == 'cancelled' %}
+                        <span class="badge bg-danger">Cancelled ❌</span>
+
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Unknown</span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- 🔹 BODY -->
+            <div class="card-body">
+
+                {% for item in order.items.all %}
+                <div class="d-flex align-items-center border-bottom py-3">
+
+                    <!-- Image -->
+                    <img src="{{ item.product.image.url }}" 
+                         width="70" height="70" 
+                         class="rounded border">
+
+                    <!-- Info -->
+                    <div class="ms-3 flex-grow-1">
+                        <h6 class="mb-1 fw-bold">{{ item.product.name }}</h6>
+                        <small class="text-muted">
+                            Qty: {{ item.quantity }} {{ item.product.unit }}
+                        </small>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="text-end">
+                        <strong class="text-success">
+                            Rs {{ item.total_price|floatformat:2 }}
+                        </strong>
+                    </div>
+
+                </div>
+                {% endfor %}
+
+                <!-- 🔹 FOOTER -->
+                <div class="d-flex justify-content-between align-items-center pt-3 flex-wrap gap-2">
+
+                    <!-- Total -->
+                    <div>
+                        <strong>Total:</strong>
+                        <span class="text-success fw-bold">
+                            Rs {{ order.total_cost|floatformat:2 }}
+                        </span>
+                    </div>
+
+                    <!-- 🔥 BUTTONS -->
+                    <div class="d-flex gap-2">
+
+                        <!-- Details -->
+                        <a href="{% url 'order_detail' order.id %}" 
+                           class="btn btn-sm btn-light border">
+                            Details
+                        </a>
+
+                        <!-- Invoice -->
+                        <a href="{% url 'generate_invoice' order.id %}" 
+                           class="btn btn-sm btn-dark">
+                            <i class="fas fa-file-invoice"></i> Bill
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+
+    {% else %}
+
+        <!-- 🔹 EMPTY STATE -->
+        <div class="text-center py-5">
+            <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+            <h4>No orders yet</h4>
+            <p class="text-muted">Start shopping to see your orders here</p>
+
+            <a href="{% url 'product_list' %}" class="btn btn-warning mt-3">
+                🛒 Start Shopping
+            </a>
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

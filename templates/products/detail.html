@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- 1. FONT IMPORT (Poppins & Montserrat) -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+
+<style>
+    /* 🚀 TYPOGRAPHY OVERRIDE */
+    body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+    h1, h2, h3, .btn-premium { font-family: 'Montserrat', sans-serif; }
+    
+    .letter-spacing-sm { letter-spacing: 0.5px; }
+    .letter-spacing-lg { letter-spacing: 2px; }
+
+    /* 🔙 BACK BUTTON */
+    .back-btn-box { transition: 0.3s; background: #131921; color: #eab308 !important; border: 1px solid #eab308; }
+    .back-btn-box:hover { background: #eab308; color: #000 !important; transform: translateX(-5px); }
+
+    /* CONTAINER STYLING */
+    .detail-card { 
+        background: #fff; 
+        border-radius: 24px; 
+        padding: 50px; 
+        box-shadow: 0 20px 50px rgba(0,0,0,0.05); 
+        border: 1px solid #f1f5f9; 
+    }
+
+    /* PRICE STYLE */
+    .main-price { font-size: 52px; font-weight: 800; color: #131921; letter-spacing: -2px; }
+    .old-price { font-size: 18px; color: #94a3b8; text-decoration: line-through; }
+
+    /* BADGES */
+    .badge-gold { background: #eab308; color: #000; font-size: 10px; font-weight: 800; padding: 5px 12px; border-radius: 6px; }
+    .badge-category { background: #f1f5f9; color: #64748b; font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 6px; }
+
+    /* BUTTONS */
+    .btn-add-cart { background: #131921; color: #fff; border: none; border-radius: 14px; font-weight: 700; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+    .btn-add-cart:hover { background: #000; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+    
+    .btn-buy-now { background: #eab308; color: #000; border: none; border-radius: 14px; font-weight: 700; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+    .btn-buy-now:hover { background: #d4af37; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(234, 179, 8, 0.3); }
+
+    /* ZOOM EFFECT */
+    .img-zoom-box { overflow: hidden; border-radius: 20px; background: #fafafa; border: 1px solid #f1f5f9; }
+    .img-zoom-box img { transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); cursor: zoom-in; }
+    .img-zoom-box:hover img { transform: scale(1.15); }
+
+    .qty-input-custom { border: 2px solid #131921; border-radius: 10px; padding: 10px; font-weight: 800; text-align: center; }
+</style>
+
+<div class="container py-4">
+    <!-- Back Button -->
+    <div class="mb-4">
+        <a href="javascript:history.back()" class="text-decoration-none">
+            <div class="d-inline-flex align-items-center px-4 py-2 rounded-pill shadow-sm back-btn-box">
+                <i class="fas fa-chevron-left me-2"></i> <span class="fw-bold small">BACK TO SHOP</span>
+            </div>
+        </a>
+    </div>
+
+    <div class="detail-card">
+        <div class="row g-5">
+            <!-- 1. IMAGE SIDE -->
+            <div class="col-md-5">
+                <div class="img-zoom-box p-4 text-center">
+                    <img src="{{ product.image.url }}" class="img-fluid" style="max-height: 400px; object-fit: contain;">
+                </div>
+                <p class="text-center mt-3 text-muted small fw-bold"><i class="fas fa-check-circle text-success"></i> 100% ORIGINAL PRODUCT</p>
+            </div>
+
+            <!-- 2. INFO SIDE -->
+            <div class="col-md-7">
+                <div class="d-flex gap-2 mb-3">
+                    <span class="badge-gold">PREMIUM</span>
+                    <span class="badge-category text-uppercase">{{ product.category.name }}</span>
+                </div>
+
+                <h1 class="fw-bold mb-1" style="font-size: 42px; color: #131921;">{{ product.name }}</h1>
+                
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <small class="fw-bold text-muted">ID: {{ product.product_id }}</small>
+                    <small class="fw-bold text-warning"><i class="fas fa-store"></i> InstaCart Official</small>
+                </div>
+
+                <hr class="my-4" style="opacity: 0.1;">
+
+                <!-- Price -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-baseline gap-3">
+                        <span class="main-price">Rs {{ product.get_discounted_price|floatformat:2 }}</span>
+                        {% if product.has_discount %}
+                            <span class="old-price">Rs {{ product.price }}</span>
+                        {% endif %}
+                    </div>
+                    <span class="text-success fw-bold small"><i class="fas fa-tag"></i> Best price for you today</span>
+                </div>
+
+                <!-- Status Boxes -->
+                <div class="row g-2 mb-5">
+                    <div class="col-6 col-lg-4">
+                        <div class="p-3 border rounded-4 bg-light">
+                            <small class="d-block text-muted fw-bold small text-uppercase mb-1">Unit</small>
+                            <b class="text-dark">{{ product.get_unit_display }}</b>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-4">
+                        <div class="p-3 border rounded-4 bg-light">
+                            <small class="d-block text-muted fw-bold small text-uppercase mb-1">Availability</small>
+                            <b class="{% if product.is_expired %}text-danger{% else %}text-success{% endif %}">
+                                {% if product.is_expired %}Out of Stock{% else %}In Stock{% endif %}
+                            </b>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                {% if not product.is_expired %}
+                <form action="{% url 'cart_add' product.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="fw-bold small text-muted text-uppercase mb-2 d-block">Select Quantity</label>
+                        <input type="number" name="quantity" value="1" min="1" class="qty-input-custom w-25">
+                    </div>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-add-cart w-100 py-3 shadow">
+                                <i class="fas fa-shopping-basket me-2"></i> Add to Cart
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{% url 'checkout_details' %}" class="btn btn-buy-now w-100 py-3 shadow">
+                                Buy It Now
+                            </a>
+                        </div>
+                    </div>
+                </form>
+                {% endif %}
+
+                <!-- Description -->
+                <div class="mt-5 border-top pt-4">
+                    <h6 class="fw-bold text-uppercase letter-spacing-lg mb-3" style="font-size: 13px;">Product Information</h6>
+                    <div class="text-secondary lh-lg small">
+                        {{ product.description|linebreaks|default:"Premium quality guaranteed with InstaCart's express delivery. Handpicked for freshness." }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

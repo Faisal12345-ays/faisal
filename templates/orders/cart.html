@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+
+    <!-- 🔙 CONTINUE SHOPPING -->
+    <div class="mb-4">
+        <a href="{% url 'product_list' %}" class="text-decoration-none">
+            <div class="d-inline-flex align-items-center bg-white px-4 py-2 rounded-pill shadow-sm border border-light hover-back">
+                <i class="fas fa-arrow-left me-2 text-orange"></i>
+                <span class="text-dark fw-bold small">Continue Shopping</span>
+            </div>
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <!-- 🛒 ITEMS LIST (LEFT) -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm p-4 rounded-4 bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-bold m-0 text-dark">Your Cart</h3>
+                    <span class="badge bg-light text-dark border rounded-pill px-3">{{ cart_items|length }} Items</span>
+                </div>
+                
+                <hr class="opacity-10 mb-0">
+
+                {% for item in cart_items %}
+                <div class="cart-item-row d-flex align-items-center py-4 border-bottom position-relative">
+                    <!-- Image -->
+                    <div class="item-img-box me-4 shadow-sm border rounded-3 bg-light">
+                        <img src="{{ item.product.image.url }}" class="img-fluid" style="height: 80px; object-fit: contain;">
+                    </div>
+
+                    <!-- Details -->
+                    <div class="flex-grow-1">
+                        <h6 class="fw-bold mb-1"><a href="{% url 'product_detail' item.product.product_id %}" class="text-dark text-decoration-none hover-orange">{{ item.product.name }}</a></h6>
+                        <small class="text-muted d-block mb-2">ID: {{ item.product.product_id }}</small>
+                        <div class="badge bg-light text-success border small">{{ item.product.get_unit_display }}</div>
+                    </div>
+
+                    <!-- Quantity & Price -->
+                    <div class="text-center px-3" style="min-width: 120px;">
+                        <small class="text-muted d-block small mb-1">Rate: Rs {{ item.price|floatformat:0 }}</small>
+                        <span class="badge bg-dark text-white p-2 px-3 rounded-3">Qty: {{ item.quantity }}</span>
+                    </div>
+
+                    <!-- Line Total -->
+                    <div class="text-end" style="min-width: 150px;">
+                        <div class="fw-bold fs-5 text-dark">Rs {{ item.total_price|floatformat:2 }}</div>
+                        <a href="{% url 'cart_remove' item.product.id %}" class="text-danger small text-decoration-none mt-2 d-inline-block hover-shake">
+                            <i class="fas fa-trash-alt me-1"></i> Remove
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-5">
+                    <i class="fas fa-shopping-basket fa-4x text-muted mb-3 opacity-25"></i>
+                    <h5 class="text-muted">Your shopping basket is empty.</h5>
+                    <a href="/" class="btn btn-warning mt-3 px-5 fw-bold rounded-pill">Start Shopping</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 💰 SUMMARY SECTION (RIGHT) -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-lg p-4 rounded-4 bg-white sticky-top" style="top: 100px;">
+                <h4 class="fw-bold mb-4">Order Summary</h4>
+                
+                <div class="summary-details mb-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Subtotal</span>
+                        <span class="fw-bold">Rs {{ grand_total|add:"-300"|floatformat:2 }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Shipping Fee</span>
+                        <span class="text-danger fw-bold">+ Rs 300.00</span>
+                    </div>
+                    <hr class="opacity-10">
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <h5 class="fw-bold m-0">Grand Total</h5>
+                        <h4 class="fw-bold m-0" style="color: #24880b; font-size: 28px;">Rs {{ grand_total|floatformat:2 }}</h4>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-light rounded-3 mb-4 border-start border-4 border-success small">
+                    <i class="fas fa-shield-check text-success me-2"></i> Free delivery on this order as part of our new year offer!
+                </div>
+
+                {% if cart_items %}
+                <div class="d-grid gap-2">
+                    <a href="{% url 'checkout_details' %}" class="btn-checkout-premium shadow-lg">
+                        Proceed to Checkout <i class="fas fa-chevron-right ms-2"></i>
+                    </a>
+                </div>
+                {% endif %}
+
+                <!-- Payments Icons -->
+                <div class="text-center mt-4 border-top pt-3 opacity-50">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" height="15" class="me-3">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" height="20">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root { --p-orange: #f85606; --p-green: #24880b; }
+    body { background-color: #f1f3f6 !important; }
+
+    /* Buttons */
+    .hover-back { transition: 0.3s ease; }
+    .hover-back:hover { background: #fdf2bb !important; transform: translateX(-5px); border-color: #fcd200 !important; }
+
+    .btn-checkout-premium { 
+        background: linear-gradient(135deg, #ffd814 0%, #ff9900 100%); 
+        border: 1px solid #ff8f00; 
+        color: #111; 
+        font-weight: 800; 
+        padding: 18px; 
+        border-radius: 14px; 
+        text-align: center; 
+        text-decoration: none; 
+        font-size: 18px;
+        transition: 0.3s;
+    }
+    .btn-checkout-premium:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 153, 0, 0.3); color: #000; }
+
+    /* Item Box */
+    .item-img-box { width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 10px; background: #fff; }
+    .hover-orange:hover { color: var(--p-orange) !important; }
+    
+    .hover-shake:hover { animation: shake 0.5s; }
+    @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
+
+    .text-orange { color: var(--p-orange); }
+</style>
+{% endblock %}

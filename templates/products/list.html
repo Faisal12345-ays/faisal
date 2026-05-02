@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-3">
+
+    <!-- 🔵 1. COMPACT NEON CATEGORY BAR (Spacing Fix) -->
+    <div class="category-nav-row d-flex gap-5 overflow-auto no-scrollbar mb-5 py-4 px-2">
+        
+        <div class="category-item text-center">
+            <a href="{% url 'product_list' %}" class="text-decoration-none">
+                <div class="neon-diamond-v3 {% if not request.GET.category %}active-neon-blue{% endif %}" style="--neon-c: #00f2ff;">
+                    <div class="diamond-inner"><i class="fas fa-th-large"></i></div>
+                </div>
+                <span class="cat-label-neon">ALL</span>
+            </a>
+        </div>
+
+        {% for cat in categories %}
+        <div class="category-item text-center">
+            <a href="?category={{ cat.id }}" class="text-decoration-none">
+                <div class="neon-diamond-v3 {% if request.GET.category == cat.id|stringformat:'s' %}active-neon-gold{% endif %}" 
+                     style="--neon-c: {% if 'Drink' in cat.name %}#00f2ff{% elif 'fruit' in cat.name %}#39ff14{% elif 'Meat' in cat.name %}#ff003c{% else %}#eab308{% endif %};">
+                    <div class="diamond-inner"><img src="{% static 'images/bill_logo.png' %}" style="width: 25px;"></div>
+                </div>
+                <span class="cat-label-neon">{{ cat.name|upper }}</span>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- 📦 2. CATEGORY SECTIONS (Neon Grid) -->
+    {% for cat in categories %}
+        {% if cat.products.all %}
+        {% if not request.GET.category or request.GET.category == cat.id|stringformat:'s' %}
+        <div class="category-block mb-5">
+            
+            <div class="section-banner-neon mb-4" style="--section-glow: #eab308;">
+                <h3 class="m-0 fw-bold">{{ cat.name }}</h3>
+                <img src="{% static 'images/bill_logo.png' %}" style="height: 45px;">
+            </div>
+
+            <div class="row g-4 px-1">
+                {% for product in cat.products.all %}
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                    <div class="neon-product-card shadow">
+                        <a href="{% url 'product_detail' product.product_id %}" class="n-img-wrapper">
+                            <img src="{{ product.image.url }}" class="img-fluid">
+                            {% if product.discount > 0 %}<span class="n-sale-tag">SALE</span>{% endif %}
+                        </a>
+                        <div class="p-3 text-center">
+                            <h6 class="n-p-title text-truncate">{{ product.name }}</h6>
+                            <div class="fw-bold text-white mb-2">Rs {{ product.get_discounted_price|floatformat:0 }}</div>
+                            <form action="{% url 'cart_add' product.id %}" method="post" class="m-0">
+                                {% csrf_token %}<input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn-n-add"><i class="fas fa-plus"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+    {% endfor %}
+</div>
+
+<style>
+    /* 🎨 NEON SYSTEM 2.0 */
+    body { background-color: #050505 !important; color: #fff; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+
+    /* Diamonds: Made smaller & more gap */
+    .neon-diamond-v3 {
+        width: 55px; height: 55px; background: #111;
+        transform: rotate(45deg); position: relative; margin: 0 auto;
+        border: 1.5px solid #333; transition: 0.3s;
+    }
+    .diamond-inner { transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; height: 100%; font-size: 18px; color: #fff; }
+    .cat-label-neon { font-size: 10px; font-weight: 800; color: #888; display: block; margin-top: 15px; letter-spacing: 1px; }
+
+    /* Active Glow Logic */
+    .category-item:hover .neon-diamond-v3, .active-neon-blue, .active-neon-gold { 
+        background: #fff !important; transform: rotate(45deg) scale(1.1); 
+        box-shadow: 0 0 15px var(--neon-c); border-color: var(--neon-c);
+    }
+    .active-neon-blue i, .active-neon-gold img { filter: brightness(0.2); }
+
+    /* Neon Section Banners */
+    .section-banner-neon {
+        background: #111; padding: 15px 30px; border-radius: 12px;
+        display: flex; align-items: center; justify-content: space-between;
+        border: 1px solid #222; border-left: 5px solid var(--section-glow);
+        box-shadow: 0 0 10px rgba(234, 179, 8, 0.1);
+    }
+
+    /* 🔥 NEON PRODUCT CARDS */
+    .neon-product-card {
+        background: #0d1117; border-radius: 15px; border: 1px solid #222;
+        transition: 0.3s; height: 100%; position: relative;
+    }
+    .neon-product-card:hover { 
+        transform: translateY(-8px); border-color: #fff;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1) !important;
+    }
+    .n-img-wrapper { height: 130px; display: flex; align-items: center; justify-content: center; padding: 10px; background: #fff; border-radius: 12px; margin: 10px; overflow: hidden; }
+    .n-p-title { font-size: 12px; font-weight: 700; color: #fff; height: 34px; overflow: hidden; }
+    .btn-n-add { background: #eab308; border: none; width: 35px; height: 35px; border-radius: 10px; color: #000; transition: 0.2s; }
+    .btn-n-add:hover { background: #fff; box-shadow: 0 0 15px #fff; }
+</style>
+{% endblock %}

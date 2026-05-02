@@ -1,0 +1,38 @@
+<!-- templates/products/signup.html -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-5">
+        <div class="card border-0 shadow-lg p-5 rounded-4 bg-white">
+            <div class="text-center mb-4">
+                <img src="{% static 'images/bill_logo.png' %}" style="height: 100px;">
+                <h2 class="fw-bold mt-3">Create Your Account</h2>
+                <p class="text-muted">Join InstaCart to start shopping fresh groceries</p>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-dark w-100 fw-bold py-3 rounded-pill shadow" style="background:#131921;">
+                    Create Account & Start Shopping
+                </button>
+            </form>
+            
+            <div class="text-center mt-4 border-top pt-3">
+                <span class="text-muted">Already have an account?</span> 
+                <a href="{% url 'login' %}" class="fw-bold text-orange text-decoration-none">Sign In</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Django form ko stylish banane ke liye */
+    input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
+    label { font-weight: 600; font-size: 14px; margin-bottom: 5px; color: #555; }
+    .main-content { margin-left: 0 !important; } /* Signup par sidebar nahi chahiye */
+    .sidebar { display: none !important; }
+</style>
+{% endblock %}

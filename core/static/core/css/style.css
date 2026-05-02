@@ -1,0 +1,34 @@
+/* Sidebar */
+.main-sidebar {
+    background-color: #1e293b !important;
+}
+
+/* Sidebar text */
+.nav-sidebar .nav-link {
+    color: #cbd5e1 !important;
+}
+
+/* Active item */
+.nav-sidebar .nav-link.active {
+    background-color: #334155 !important;
+}
+
+/* Top navbar */
+.main-header {
+    background-color: #0f172a !important;
+}
+
+/* Cards */
+.card {
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Buttons */
+.btn-success {
+    background-color: #16a34a !important;
+}
+
+.btn-info {
+    background-color: #06b6d4 !important;
+}

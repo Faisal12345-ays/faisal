@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-4 bg-white p-4 rounded shadow-sm">
+        <h3 class="fw-bold mb-3">Sign In</h3>
+        <form method="post"> {% csrf_token %} {{ form.as_p }}
+            <button type="submit" class="btn btn-warning w-100 fw-bold">Login</button>
+        </form>
+        <p class="mt-4 small text-center">New? <a href="{% url 'signup' %}">Create Account</a></p>
+    </div>
+</div>
+{% endblock %}

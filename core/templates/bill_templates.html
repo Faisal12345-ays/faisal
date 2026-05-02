@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Bill #{{ order.id }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .header { text-align: center; }
+        .items { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .items th, .items td { border: 1px solid #000; padding: 5px; text-align: left; }
+        .total { text-align: right; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>InstaCart Grocery</h2>
+        <p>Order #{{ order.id }} | {{ order.created_at }}</p>
+    </div>
+
+    <table class="items">
+        <tr>
+            <th>Product</th>
+            <th>Unit Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+        {% for item in order.orderitem_set.all %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.product.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.get_total }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="total">
+        Total Amount: {{ order.get_total }}
+    </div>
+</body>
+</html>

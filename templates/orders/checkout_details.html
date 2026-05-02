@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row justify-content-center py-5">
+    <div class="col-md-6">
+
+        <!-- Progress Indicator (Amazon Style) -->
+        <div class="d-flex justify-content-between mb-4 small fw-bold text-muted px-2">
+            <span class="text-orange"><i class="fas fa-map-marker-alt"></i> Address</span>
+            <span>2. Payment</span>
+            <span>3. Review</span>
+        </div>
+
+        <div class="bg-white p-5 shadow-sm rounded-3 border">
+            <h4 class="fw-bold mb-4">Enter a shipping address</h4>
+
+            <!-- 🔥 FIX: Action ko khali chhor dein taake ye views.py ke checkout_details function mein jaye -->
+            <form method="POST" action=""> <!-- Action khali rakhein -->
+    {% csrf_token %}
+    <input type="text" name="name" ... required> <!-- name="name" hona chahiye -->
+    <input type="text" name="phone" ... required> <!-- name="phone" hona chahiye -->
+    <textarea name="address" ... required></textarea> <!-- name="address" hona chahiye -->
+    <button type="submit" ...>Continue to Payment</button>
+</form>
+            </form>
+        </div>
+        
+        <p class="text-center mt-4 small text-muted">
+            Need help? Visit our <a href="#" class="text-decoration-none">Help Center</a>
+        </p>
+    </div>
+</div>
+
+<style>
+.text-orange { color: #f85606; }
+.amz-orange-btn {
+    background: #ffa41c;
+    border: 1px solid #ff8f00;
+    color: black;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+.amz-orange-btn:hover {
+    background: #f79400;
+}
+body {
+    background-color: #f1f3f6 !important;
+}
+</style>
+
+{% endblock %}

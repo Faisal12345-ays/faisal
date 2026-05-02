@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row bg-white p-4 p-md-5 shadow-sm rounded-3 g-4">
+    <!-- Image -->
+    <div class="col-md-5 text-center border-end">
+        <div class="p-4 border rounded">
+            <img src="{{ product.image.url }}" class="img-fluid" style="max-height: 350px; object-fit: contain;">
+        </div>
+    </div>
+    
+    <!-- Product Info -->
+    <div class="col-md-7 ps-md-5">
+        <nav class="small mb-3">
+            <a href="/" class="text-decoration-none text-success">Store</a> / 
+            <span class="text-muted">{{ product.category.name }}</span>
+        </nav>
+        
+        <h1 class="fw-bold">{{ product.name }}</h1>
+        <p class="text-muted">Item Model: <b>{{ product.product_id }}</b></p>
+        <hr>
+        
+        <div class="py-3">
+            {% if product.has_discount %}
+                <h5 class="text-danger">Deal: {{ product.discount }}% OFF</h5>
+                <h2 class="text-success fw-bold">Rs {{ product.get_discounted_price|floatformat:2 }}</h2>
+                <p class="text-muted">M.R.P: <del>Rs {{ product.price }}</del></p>
+            {% else %}
+                <h2 class="fw-bold">Rs {{ product.price }}</h2>
+            {% endif %}
+            <small class="text-muted">Inclusive of all taxes</small>
+        </div>
+
+        <div class="my-3 p-3 bg-light rounded border-start border-4 border-warning">
+            <i class="fas fa-truck text-warning me-2"></i> <b>Fast Delivery:</b> Get it within 30 minutes!
+        </div>
+
+        <p class="mb-1"><b>Unit:</b> {{ product.get_unit_display }}</p>
+        <p><b>Condition:</b> 
+            {% if product.is_expired %}
+                <span class="badge bg-danger">Expired ❌</span>
+            {% else %}
+                <span class="badge bg-success">Fresh Item ✅</span>
+            {% endif %}
+        </p>
+
+        {% if not product.is_expired %}
+        <form action="{% url 'cart_add' product.id %}" method="post" class="mt-4 row g-2">
+            {% csrf_token %}
+            <div class="col-3">
+                <input type="number" name="quantity" value="1" min="1" class="form-control h-100 border-warning">
+            </div>
+            <div class="col-9">
+                <button type="submit" class="btn btn-amazon btn-lg w-100 fw-bold shadow-sm">Add to Cart</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

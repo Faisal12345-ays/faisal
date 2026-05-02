@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-5">
+    <div class="row">
+
+        <!-- LEFT SIDE -->
+        <div class="col-md-4">
+
+            <!-- User Info Card -->
+            <div class="card border-0 shadow-sm p-4 text-center rounded-3 mb-3">
+                <div class="mb-3">
+                    <i class="fas fa-user-circle fa-5x text-secondary"></i>
+                </div>
+
+                <h4 class="fw-bold">{{ user.username }}</h4>
+                <p class="text-muted small">{{ user.email }}</p>
+
+                <hr>
+
+                <div class="text-start">
+                    <h6 class="fw-bold small text-uppercase">Account Settings</h6>
+
+                    <a href="#" class="d-block small text-decoration-none mb-2 text-dark">
+                        <i class="fas fa-key me-2"></i> Change Password
+                    </a>
+
+                    <a href="{% url 'logout' %}" class="d-block small text-decoration-none text-danger">
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                    </a>
+                </div>
+            </div>
+
+            <!-- 🔥 NEW ACCOUNT DETAILS (PRIVACY SAFE) -->
+            <div class="card border-0 shadow-sm p-4 rounded-3">
+                <h5 class="fw-bold mb-3">Account Details</h5>
+
+                <p><b>Username:</b> {{ user.username }}</p>
+
+                <!-- Phone Mask -->
+                <p>
+                    <b>Phone:</b> 
+                    {% if order and order.customer_phone %}
+                        *******{{ order.customer_phone|slice:"-4:" }}
+                    {% else %}
+                        Not available
+                    {% endif %}
+                </p>
+
+                <!-- Address -->
+                <p>
+                    <b>Address:</b> 
+                    {% if user_address %}
+                        {{ user_address|truncatechars:20 }}
+                    {% else %}
+                        Not set
+                    {% endif %}
+                </p>
+
+                <small class="text-info">
+                    Full details only visible to Admin.
+                </small>
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="col-md-8">
+            <h3 class="fw-bold mb-4">Your Account</h3>
+
+            <div class="row g-3">
+
+                <!-- Orders -->
+                <div class="col-md-6">
+                    <a href="{% url 'order_history' %}" class="text-decoration-none">
+                        <div class="card p-3 border shadow-sm h-100">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-box fa-2x text-warning me-3"></i>
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-dark">Your Orders</h6>
+                                    <small class="text-muted">Track or buy things again</small>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Security -->
+                <div class="col-md-6">
+                    <div class="card p-3 border shadow-sm h-100">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-shield-alt fa-2x text-primary me-3"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold text-dark">Login & Security</h6>
+                                <small class="text-muted">Edit login, name, and mobile number</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
