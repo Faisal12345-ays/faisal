@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-2h(av&iebp^)4t5ml!j*73sp98njm_-jklt^azy#yt4gd&+bkd'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*'] # Taake koi bhi link se website khul sakay
 
